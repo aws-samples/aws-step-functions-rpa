@@ -1,4 +1,4 @@
-## Getting Started with RPA using AWS Step Functions and Amazon Textract
+## Getting started with RPA using AWS Step Functions and Amazon Textract
 
 [AWS Step
 Functions](https://aws.amazon.com/step-functions/) is a serverless function 
