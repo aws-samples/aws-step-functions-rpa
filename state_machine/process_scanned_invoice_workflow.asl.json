@@ -1,0 +1,89 @@
+{
+  "Comment": "A state machine that starts a workflow and monitors the workflow until it completes.",
+  "StartAt": "Did Analyze Document Job Complete Successfully?",
+  "States": {
+    "Did Analyze Document Job Complete Successfully?": {
+      "Type": "Choice",
+      "Choices": [{
+        "Variable": "$.status",
+        "StringEquals": "SUCCEEDED",
+        "Next": "Save Document Analysis"
+      }, {
+        "Variable": "$.status",
+        "StringEquals": "FAILED",
+        "Next": "Analyze Document Job Failed"
+      }],
+      "Default": "Analyze Document Job Failed"
+    },
+    "Analyze Document Job Failed": {
+      "Type": "Fail",
+      "Cause": "Textract Job Failed",
+      "Error": "Analyze Document Job returned FAILED"
+    },
+    "Save Document Analysis": {
+      "Type": "Task",
+      "Resource": "${SaveDocumentAnalysisLambdaArn}",
+      "InputPath": "$",
+      "Next": "Process Document Analysis",
+      "Retry": [{
+        "ErrorEquals": ["States.ALL"],
+        "IntervalSeconds": 1,
+        "MaxAttempts": 3,
+        "BackoffRate": 2
+      }]
+    },
+    "Process Document Analysis": {
+      "Type": "Task",
+      "Resource": "${ProcessDocumentAnalysisLambdaArn}",
+      "InputPath": "$",
+      "Next": "Is Approved for Payment?",
+      "Retry": [{
+        "ErrorEquals": ["States.ALL"],
+        "IntervalSeconds": 1,
+        "MaxAttempts": 3,
+        "BackoffRate": 2
+      }]
+    },
+    "Is Approved for Payment?": {
+      "Type": "Choice",
+      "Choices": [{
+        "Variable": "$.payment_info.status",
+        "StringEquals": "Approved for Payment",
+        "Next": "Archive Document"
+      },
+      {
+        "Variable": "$.payment_info.status",
+        "StringEquals": "Pending Review",
+        "Next": "Review Document"
+      }],
+      "Default": "Review Document"
+    },
+    "Archive Document": {
+      "Type": "Task",
+      "Resource": "${ArchiveDocumentLambdaArn}",
+      "InputPath": "$",
+      "Next": "Document Processed",
+      "Retry": [{
+        "ErrorEquals": ["States.ALL"],
+        "IntervalSeconds": 1,
+        "MaxAttempts": 3,
+        "BackoffRate": 2
+      }]
+    },
+    "Review Document": {
+      "Type": "Task",
+      "InputPath": "$",
+      "ResultPath": "$",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Next": "Document Processed",
+      "Parameters": {
+        "TopicArn": "${PendingReviewTopicArn}",
+        "Message.$": "$"
+      }
+    },
+    "Document Processed": {
+      "Type": "Succeed"
+    }
+  }
+}
+
