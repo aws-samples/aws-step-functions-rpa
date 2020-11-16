@@ -7,6 +7,8 @@ is a fully managed machine learning service that automatically extracts text
 and data from scanned documents. Combining these services, you can create an RPA bot 
 to automate the processing of documents.
 
+See [Getting started with RPA using AWS Step Functions and Amazon Textract blog post](https://aws.amazon.com/blogs/compute/getting-started-with-rpa-using-aws-step-functions-and-amazon-textract/).
+
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
