@@ -18,9 +18,7 @@ from datetime import datetime
 import json
 import os
 import re
-import uuid
 
-texttract_client = boto3.client('textract')
 s3_client = boto3.client('s3')
 dynamodb_client = boto3.client('dynamodb')
 
