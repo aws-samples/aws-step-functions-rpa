@@ -133,6 +133,11 @@ Resources:
         !Sub
           - ${BucketNamePrefix}-${AWS::AccountId}
           - { BucketNamePrefix: !Ref ScannedInvoicesBucketNamePrefix }
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: alias/aws/s3
   InvoiceAnalysesBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -140,6 +145,11 @@ Resources:
         !Sub
           - ${BucketNamePrefix}-${AWS::AccountId}
           - { BucketNamePrefix: !Ref InvoiceAnalysesBucketNamePrefix }
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: alias/aws/s3
   ProcessedInvoicesBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -147,6 +157,11 @@ Resources:
         !Sub
           - ${BucketNamePrefix}-${AWS::AccountId}
           - { BucketNamePrefix: !Ref ProcessedInvoicesBucketNamePrefix }
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'aws:kms'
+              KMSMasterKeyID: alias/aws/s3
   StartProcessScannedInvoiceWorkflowFunctionLambdaExecutionRole: 
     Type: AWS::IAM::Role
     Properties:
