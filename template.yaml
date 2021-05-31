@@ -210,6 +210,14 @@ Resources:
                 Action:
                   - states:StartExecution
                 Resource: "*"
+        - PolicyName: kms
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - kms:Decrypt
+                Resource: "*" 
       RoleName:
         !Sub
           - ${AWS::StackName}-${ExecutionRoleName}
@@ -297,6 +305,7 @@ Resources:
   DocumentAnalysisCompletedTopic:
     Type: AWS::SNS::Topic
     Properties:
+      KmsMasterKeyId: !Ref Key
       TopicName:
         !Sub
           - ${AWS::StackName}-${TopicName}
@@ -305,6 +314,7 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       DelaySeconds: 60
+      KmsMasterKeyId: !Ref Key
       QueueName:
         !Sub
           - ${AWS::StackName}-${QueueName}
@@ -359,6 +369,15 @@ Resources:
                   !Sub
                     - arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AWS::StackName}-${TopicName}
                     - { TopicName: DocumentAnalysisCompleted }
+        - PolicyName: kms
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - kms:GenerateDataKey*
+                  - kms:Decrypt
+                Resource: "*" 
       RoleName:
         !Sub
           - ${AWS::StackName}-${RoleName}
@@ -470,6 +489,7 @@ Resources:
   PendingReviewTopic:
     Type: AWS::SNS::Topic
     Properties:
+      KmsMasterKeyId: !Ref Key
       TopicName:
         !Sub
           - ${AWS::StackName}-${TopicName}
@@ -687,6 +707,15 @@ Resources:
                   !Sub
                     - arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AWS::StackName}-${TopicName}
                     - { TopicName: PendingReview }
+        - PolicyName: kms
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - kms:GenerateDataKey*
+                  - kms:Decrypt
+                Resource: "*" 
       RoleName:
         !Sub
           - ${AWS::StackName}-${ExecutionRoleName}
@@ -706,6 +735,36 @@ Resources:
         !Sub
           - ${AWS::StackName}-${LambdaFunctionName}
           - { LambdaFunctionName: ProcessScannedInvoiceWorkflow }
+  Key:
+    Type: 'AWS::KMS::Key'
+    Properties:
+      KeyPolicy:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+          Action: 'kms:*'
+          Resource: '*'
+        - Effect: Allow
+          Principal:
+            Service: !Sub 'textract.amazonaws.com'
+          Action:
+            - kms:GenerateDataKey*
+            - kms:Decrypt
+          Resource: '*'
+        - Effect: Allow
+          Principal:
+            Service: !Sub 'sns.amazonaws.com'
+          Action:
+            - kms:GenerateDataKey*
+            - kms:Decrypt
+          Resource: '*'
+  KeyAlias:
+    Type: 'AWS::KMS::Alias'
+    Properties:
+      AliasName: !Sub 'alias/${AWS::StackName}-Key'
+      TargetKeyId: !Ref Key
 
 Outputs:
   ScannedInvoicesBucketName:
