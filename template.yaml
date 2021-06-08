@@ -242,10 +242,8 @@ Resources:
         SQSEvent:
           Type: SQS
           Properties:
-            Queue:  
-              !Sub 
-                - arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:${AWS::StackName}-${QueueName}
-                - { QueueName: DocumentAnalysisCompletedQueue }
+            Queue:
+              !Sub ${DocumentAnalysisCompletedQueue.Arn}
       FunctionName: 
         !Sub
           - ${AWS::StackName}-${LambdaFunctionName}
