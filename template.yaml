@@ -138,6 +138,8 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: 'aws:kms'
               KMSMasterKeyID: alias/aws/s3
+      VersioningConfiguration:
+        Status: Enabled
   InvoiceAnalysesBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -150,6 +152,8 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: 'aws:kms'
               KMSMasterKeyID: alias/aws/s3
+      VersioningConfiguration:
+        Status: Enabled
   ProcessedInvoicesBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -162,6 +166,8 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: 'aws:kms'
               KMSMasterKeyID: alias/aws/s3
+      VersioningConfiguration:
+        Status: Enabled
   StartProcessScannedInvoiceWorkflowFunctionLambdaExecutionRole: 
     Type: AWS::IAM::Role
     Properties:
