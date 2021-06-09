@@ -256,6 +256,14 @@ Resources:
       MemorySize: 128        
       Runtime: python3.7
       Timeout: 30
+  StartProcessScannedInvoiceWorkflowFunctionLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: 
+          !Sub
+            - /aws/lambda/${AWS::StackName}-${LambdaFunctionName}
+            - LambdaFunctionName: StartProcessScannedInvoiceWorkflow
+        RetentionInDays: 7
   StartDocumentAnalysisFunctionLambdaExecutionRole: 
     Type: AWS::IAM::Role
     Properties:
@@ -418,6 +426,14 @@ Resources:
       MemorySize: 128        
       Runtime: python3.7
       Timeout: 30
+  StartDocumentAnalysisFunctionLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: 
+          !Sub
+            - /aws/lambda/${AWS::StackName}-${LambdaFunctionName}
+            - LambdaFunctionName: StartDocumentAnalysis
+        RetentionInDays: 7
   SaveDocumentAnalysisFunctionLambdaExecutionRole: 
     Type: AWS::IAM::Role
     Properties:
@@ -490,6 +506,14 @@ Resources:
       MemorySize: 128        
       Runtime: python3.7
       Timeout: 30
+  SaveDocumentAnalysisFunctionLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: 
+          !Sub
+            - /aws/lambda/${AWS::StackName}-${LambdaFunctionName}
+            - LambdaFunctionName: SaveDocumentAnalysis
+        RetentionInDays: 7
   PendingReviewTopic:
     Type: AWS::SNS::Topic
     Properties:
@@ -580,6 +604,14 @@ Resources:
       MemorySize: 128        
       Runtime: python3.7
       Timeout: 30
+  ProcessDocumentAnalysisFunctionLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: 
+          !Sub
+            - /aws/lambda/${AWS::StackName}-${LambdaFunctionName}
+            - LambdaFunctionName: ProcessDocumentAnalysis
+        RetentionInDays: 7
   ArchiveDocumentFunctionLambdaExecutionRole: 
     Type: AWS::IAM::Role
     Properties:
@@ -660,6 +692,14 @@ Resources:
       MemorySize: 128        
       Runtime: python3.7
       Timeout: 30
+  ArchiveDocumentFunctionLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: 
+          !Sub
+            - /aws/lambda/${AWS::StackName}-${LambdaFunctionName}
+            - LambdaFunctionName: ArchiveDocument
+        RetentionInDays: 7
   ProcessScannedInvoiceWorkflowStateMachineStatesExecutionRole: 
     Type: AWS::IAM::Role
     Properties:
